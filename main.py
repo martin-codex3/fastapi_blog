@@ -1,6 +1,73 @@
-def main():
-    print("Hello from fastapi-blog!")
+from fastapi import FastAPI
 
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+
+# some sample data 
+posts: list[dict] = [
+    {
+        "id": 1,
+        "title": "Getting Started with FastAPI",
+        "author": "Martin Banda",
+        "content": "FastAPI is a modern, fast web framework for building APIs with Python based on standard type hints.",
+        "date_posted": "2026-06-01"
+    },
+    {
+        "id": 2,
+        "title": "Understanding EF Core Relationships",
+        "author": "Martin Banda",
+        "content": "One-to-many and many-to-many relationships in EF Core can be tricky when mixing Include() with Select().",
+        "date_posted": "2026-06-15"
+    },
+    {
+        "id": 3,
+        "title": "Nuxt 4 and Tailwind CSS v4 Setup",
+        "author": "Martin Banda",
+        "content": "Configuring the @source directive correctly is key to getting Tailwind to scan your Nuxt 4 app directory.",
+        "date_posted": "2026-07-02"
+    },
+    {
+        "id": 4,
+        "title": "Designing a Multi-Agent AI Pipeline",
+        "author": "Martin Banda",
+        "content": "Breaking down document analysis into specialized agents makes the system easier to test, debug, and extend.",
+        "date_posted": "2026-07-03"
+    },
+    {
+        "id": 5,
+        "title": "Async Task Queues with Redis and arq",
+        "author": "Martin Banda",
+        "content": "Using arq with Redis provides a lightweight way to handle background jobs without the overhead of Celery.",
+        "date_posted": "2026-07-04"
+    },
+    {
+        "id": 6,
+        "title": "Choosing a Storage Abstraction Layer",
+        "author": "Martin Banda",
+        "content": "A well-designed StorageService interface makes it painless to switch between local filesystem and MinIO backends.",
+        "date_posted": "2026-07-05"
+    },
+    {
+        "id": 7,
+        "title": "JWT Authentication in ASP.NET Core",
+        "author": "Martin Banda",
+        "content": "Binding JWTSettings via IOptions and storing secrets with dotnet user-secrets keeps configuration clean and secure.",
+        "date_posted": "2026-07-06"
+    },
+    {
+        "id": 8,
+        "title": "Building a Role-Based Permission System",
+        "author": "Martin Banda",
+        "content": "Seeding a 13-role permission structure upfront saves a lot of headaches later when access control needs grow.",
+        "date_posted": "2026-07-07"
+    }
+]
+
+@app.get("/")
+def root():
+    return {"message": "Hello world"}
+
+# getting all the posts here 
+@app.get("/posts")
+def get_posts() -> list[dict]:
+    return posts
