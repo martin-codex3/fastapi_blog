@@ -1,12 +1,4 @@
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-
-
-app = FastAPI()
-templates = Jinja2Templates(directory = "templates")
-
-# some sample data 
-posts: list[dict] = [
+posts = [
     {
         "id": 1,
         "title": "Getting Started with FastAPI",
@@ -64,12 +56,3 @@ posts: list[dict] = [
         "date_posted": "2026-07-07"
     }
 ]
-
-@app.get("/")
-def root():
-    return {"message": "Hello world"}
-
-# getting all the posts here 
-@app.get("/posts")
-def get_posts() -> list[dict]:
-    return posts
