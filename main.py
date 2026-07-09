@@ -1,12 +1,14 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
-templates = Jinja2Templates(directory = "templates")
+# we will load our static files here 
+app.mount("/static", StaticFiles(directory = "static"), name="static")
+templates = Jinja2Templates("templates")
 
-# some sample data 
-posts: list[dict] = [
+posts = [
     {
         "id": 1,
         "title": "Getting Started with FastAPI",
@@ -65,11 +67,10 @@ posts: list[dict] = [
     }
 ]
 
-@app.get("/")
-def root():
-    return {"message": "Hello world"}
-
-# getting all the posts here 
-@app.get("/posts")
-def get_posts() -> list[dict]:
-    return posts
+@app.get("/", response_class = HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse(
+        request = request,
+        name = "index.html",
+        context = {"posts": posts, "title": "home"}
+    )
