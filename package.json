@@ -3,5 +3,13 @@
     "@tailwindcss/cli": "^4.3.2",
     "postcss": "^8.5.16",
     "tailwindcss": "^4.3.2"
+  },
+  "scripts": {
+    "tailwind:watch": "tailwindcss -i ./static/css/styles.css -o ./static/css/output.css --watch",
+    "tailwind:build": "tailwindcss -i ./static/css/styles.css -o ./static/css/output.css --minify"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.498",
+    "@iconify/tailwind4": "^1.2.3"
   }
 }
