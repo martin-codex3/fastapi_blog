@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteExceptions
+from app.schemas.post_schemas import CreatePost, PostResponse
+import random
 
 app = FastAPI()
 # we will load our static files here 
@@ -93,18 +95,34 @@ async def get_post_page(request: Request, post_id: int):
 
 
 # for the api 
-@app.get("/api/posts")
-async def get_posts() -> list[dict]:
+@app.get("/api/posts", status_code=status.HTTP_200_OK, response_model=list[PostResponse])
+async def get_all_posts():
     return posts
 
 # getting a single post
-@app.get("/api/post/{post_id}")
+@app.get("/api/post/{post_id}", status_code=status.HTTP_200_OK, response_model=PostResponse)
 async def get_post(post_id: int):
     for post in posts:
         if post["id"] == post_id:
             return post
     
     raise HTTPException(status_code = status.HTTP_404_NOT_FOUND)
+
+# for create a post 
+@app.post("/api/post", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
+async def create_post(post: CreatePost):
+
+    new_post = {
+
+        "id": 9,
+        "title": post.title,
+        "content": post.content,
+        "author": post.author,
+        "date_posted": "2026-07-07"
+    }
+
+    posts.append(new_post)
+    return new_post
 
 
 # we will customize the errors here 

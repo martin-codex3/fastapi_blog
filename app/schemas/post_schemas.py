@@ -13,6 +13,8 @@ class CreatePost(PostBase):
     pass
 
 # for the created post response 
-class PostResponse(BaseModel):
+class PostResponse(PostBase):
     model_config = ConfigDict(from_attributes=True)
+
     id: int
+    date_posted: str
