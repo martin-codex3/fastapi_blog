@@ -6,9 +6,22 @@ from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteExceptions
 from app.schemas.post_schemas import CreatePost, PostResponse
-import random
+from contextlib import asynccontextmanager
+from app.core.database import database_init
 
-app = FastAPI()
+
+# we will run the database here 
+@asynccontextmanager
+async def app_life_span(app: FastAPI):
+    print("Warming up server")
+    database_init()
+    yield
+    print("shutting down server")
+
+app = FastAPI(
+    lifespan=app_life_span
+)
+
 # we will load our static files here 
 app.mount("/static", StaticFiles(directory = "static"), name="static")
 templates = Jinja2Templates("templates")
