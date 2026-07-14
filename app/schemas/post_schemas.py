@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
-
+import uuid
+from app.schemas.user_schemas import UserResponseSchema
 
 class PostBase(BaseModel):
 
@@ -10,11 +11,13 @@ class PostBase(BaseModel):
 
 # for creating a new post 
 class CreatePost(PostBase):
-    pass
+    user_id: uuid.UUID #Temporary
 
 # for the created post response 
 class PostResponse(PostBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: uuid.UUID
+    author: UserResponseSchema
     date_posted: str

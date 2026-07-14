@@ -12,13 +12,14 @@ class User(SQLModel, table=True):
     id: uuid.UUID = Field(default=None, default_factory=uuid.uuid4, primary_key=True, nullable=False)
     username: str = Field(default=None, index=True, nullable=False, unique=True)
     email: str = Field(nullable=False, index=True)
-    create_date: datetime = Field(default_factory=datetime.utcnow)
+    password: str = Field(nullable=False)
     is_profile_complete: bool = Field(default=False)
     profile_image: str | None = Field(
         String(30),
         nullable=True,
         default=None
     )
+    created_date: datetime = Field(default_factory=datetime.utcnow)
     
     # for the relationship here 
     posts: list[Post] = Relationship(back_populates="author")
