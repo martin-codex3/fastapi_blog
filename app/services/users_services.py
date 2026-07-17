@@ -15,8 +15,7 @@ class UserServices:
         return results.first()
     
     # checking if the user exists here 
-    async def check_user_exists(self, user_data: CreateUserSchema, session: AsyncSession):
-        email: EmailStr = user_data.email
+    async def check_user_exists(self, email: EmailStr, session: AsyncSession):
         
         user = await self.get_user(email = email, session = session)
         
