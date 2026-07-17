@@ -2,14 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from app.services.users_services import UserServices
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.schemas.user_schemas import CreateUserSchema
+from app.schemas.user_schemas import CreateUserSchema, UserResponseSchema
 from app.core.database import app_session
 from pydantic import EmailStr
+import uuid
+from typing import Annotated
+from sqlmodel import select
 
 users_router = APIRouter()
 user_services = UserServices()
 
-@users_router.get("/")
+@users_router.get("/", status_code=status.HTTP_201_CREATED, response_model=UserResponseSchema)
 async def create_user_account(user_data: CreateUserSchema, session: AsyncSession = Depends(app_session)):
     email: EmailStr = user_data.email
     
@@ -45,3 +48,11 @@ async def create_user_account(user_data: CreateUserSchema, session: AsyncSession
                 }
             }
         )
+
+
+# getting a user by their Id 
+@users_router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserResponseSchema)
+async def get_user_by_id(user_id: uuid.UUID, session: Annotated[AsyncSession, Depends(app_session)]):
+
+    statement = 
+    
