@@ -1,7 +1,10 @@
-from sqlmodel import SQLModel, Field, String, Relationship
+from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
-from app.models.users import User
+from typing import TYPE_CHECKING
 import uuid
+
+if TYPE_CHECKING:
+    from app.models.users import User
 
 class Post(SQLModel, table = True):
     

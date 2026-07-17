@@ -1,15 +1,17 @@
 from sqlmodel import SQLModel, Field, Relationship
 import uuid
 from datetime import datetime
-from app.models.post import Post
 
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.post import Post
 
 class User(SQLModel, table=True):
     
     __tablename__ = "users"
     
-    id: uuid.UUID = Field(default=None, default_factory=uuid.uuid4, primary_key=True, nullable=False)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, nullable=False)
     username: str = Field(default=None, index=True, nullable=False, unique=True)
     email: str = Field(nullable=False, index=True)
     password: str = Field(nullable=False)
