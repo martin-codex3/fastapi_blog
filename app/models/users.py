@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, String, Relationship
+from sqlmodel import SQLModel, Field, Relationship
 import uuid
 from datetime import datetime
 from app.models.post import Post
@@ -15,7 +15,6 @@ class User(SQLModel, table=True):
     password: str = Field(nullable=False)
     is_profile_complete: bool = Field(default=False)
     profile_image: str | None = Field(
-        String(30),
         nullable=True,
         default=None
     )

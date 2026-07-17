@@ -3,4 +3,4 @@ from app.models.post import Post
 from sqlmodel import select
 
 class PostServices:
-    
+    pass
