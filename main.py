@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status, HTTPException
+from fastapi import FastAPI, Request, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from app.core.database import database_init
 from app.controllers.posts.api.posts import posts_router
 from app.controllers.users.api.users import users_router
+
 
 # we will run the database here 
 @asynccontextmanager
