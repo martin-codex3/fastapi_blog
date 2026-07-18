@@ -19,5 +19,5 @@ class PostResponse(PostBase):
 
     id: int
     user_id: uuid.UUID
-    author: UserResponseSchema
+    user: UserResponseSchema
     date_posted: str
