@@ -1,11 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
 import uuid
 from datetime import datetime
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.post import Post
+    from app.models.post import Post  
 
 class User(SQLModel, table=True):
     
@@ -23,7 +22,7 @@ class User(SQLModel, table=True):
     created_date: datetime = Field(default_factory=datetime.utcnow)
     
     # for the relationship here 
-    posts: list[Post] = Relationship(back_populates="author")
+    posts: list["Post"] = Relationship(back_populates="author")
     
     
     @property

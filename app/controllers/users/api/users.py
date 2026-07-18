@@ -7,12 +7,12 @@ from app.core.database import app_session
 from pydantic import EmailStr
 import uuid
 from typing import Annotated
-from sqlmodel import select
+
 
 users_router = APIRouter()
 user_services = UserServices()
 
-@users_router.get("/", status_code=status.HTTP_201_CREATED, response_model=UserResponseSchema)
+@users_router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponseSchema)
 async def create_user_account(user_data: CreateUserSchema, session: AsyncSession = Depends(app_session)):
     email: EmailStr = user_data.email
     
@@ -53,6 +53,16 @@ async def create_user_account(user_data: CreateUserSchema, session: AsyncSession
 # getting a user by their Id 
 @users_router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserResponseSchema)
 async def get_user_by_id(user_id: uuid.UUID, session: Annotated[AsyncSession, Depends(app_session)]):
-
-    statement = 
+    user = await user_services.get_user_by_id(
+        user_id = user_id,
+        session = session
+    )
+    
+    if user:
+        return user
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Failed to get get user with that Id"
+        )
     

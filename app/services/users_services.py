@@ -3,6 +3,7 @@ from app.models.users import User
 from sqlmodel import select
 from app.schemas.user_schemas import CreateUserSchema
 from pydantic import EmailStr
+import uuid
 
 class UserServices:
     
@@ -37,3 +38,16 @@ class UserServices:
         await session.refresh(new_user)
         
         return new_user
+    
+    # getting a user by their id 
+    async def get_user_by_id(self, user_id: uuid.UUID, session: AsyncSession):
+        statement = select(User).where(User.id == user_id)
+        
+        user = await session.exec(statement)
+        
+        if user:
+            return user
+        else:
+            return None
+        
+        
