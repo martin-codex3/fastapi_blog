@@ -4,7 +4,10 @@ from sqlalchemy import Text, ForeignKey, Integer, String, DateTime
 from app.utils.base import Base
 from datetime import datetime, UTC
 import uuid
-from app.models.users import User
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from app.models.users import User
 
 class Post(Base):
     
@@ -17,5 +20,5 @@ class Post(Base):
     
     # for the foreign key here 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
-    user: Mapped[User | None] = relationship(back_populates="posts")
+    user: Mapped[Optional[User]] = relationship(back_populates="posts")
     

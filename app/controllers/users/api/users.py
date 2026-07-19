@@ -13,7 +13,7 @@ users_router = APIRouter()
 user_services = UserServices()
 
 @users_router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponseSchema)
-async def get_users(user_data: CreateUserSchema, session: Annotated[AsyncSession, Depends(app_session)]):
+async def create_user_account(user_data: CreateUserSchema, session: Annotated[AsyncSession, Depends(app_session)]):
     email: EmailStr = user_data.email
     user_exists = await user_services.check_if_user_exists(
         email = email,
@@ -42,6 +42,7 @@ async def get_users(user_data: CreateUserSchema, session: Annotated[AsyncSession
                 "email": new_user.email,
                 "profile_image": new_user.profile_image,
                 "image_path": new_user.image_path,
+                "posted_at": new_user.posted_at
             }
         }
     )

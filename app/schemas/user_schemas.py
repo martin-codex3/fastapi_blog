@@ -20,4 +20,4 @@ class UserResponseSchema(UserBaseSchema):
     id: uuid.UUID
     profile_image: str | None
     image_path: str
-    created_date: datetime
+    posted_at: datetime
