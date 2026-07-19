@@ -14,7 +14,7 @@ from app.controllers.users.api.users import users_router
 @asynccontextmanager
 async def app_life_span(app: FastAPI):
     print("Warming up server")
-    database_init()
+    await database_init()
     yield
     print("shutting down server")
 
