@@ -4,7 +4,7 @@ from pydantic import EmailStr
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from app.schemas.user_schemas import CreateUserSchema
 
-class UserSchema:
+class UserServices:
     
     # we will get the user by the email or username
     async def get_user(self, email: EmailStr, session: AsyncSession):
