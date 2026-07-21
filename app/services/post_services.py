@@ -2,13 +2,14 @@ from app.schemas.post_schemas import CreatePost
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from app.models.posts import Post
+from app.models.users import User
 
 
 class PostServices:
     
     async def check_if_user_exists(self, post_data: CreatePost, session: AsyncSession):
         statement = await session.execute(
-            select(Post).where(Post.id == post_data.user_id)
+            select(User).where(User.id == post_data.user_id)
         )
         
         user_exists = statement.scalars().first()

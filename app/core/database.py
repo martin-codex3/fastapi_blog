@@ -2,10 +2,7 @@ from app.core.config import AppConfig
 from sqlalchemy.ext.asyncio.engine import create_async_engine, AsyncEngine
 from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy import MetaData
-
-# we will have the metadata object here 
-metadata_obj = MetaData()
+from app.utils.base import Base
 
 # we will create the database engine here 
 app_database_engine: AsyncEngine = create_async_engine(
@@ -16,7 +13,7 @@ app_database_engine: AsyncEngine = create_async_engine(
 # conneting with the database
 async def database_init():
     async with app_database_engine.begin() as connection:
-        await connection.run_sync(metadata_obj.create_all)
+        await connection.run_sync(Base.metadata.create_all)
 
 # we will create the database session here 
 async def app_session():

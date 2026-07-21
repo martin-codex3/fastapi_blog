@@ -4,7 +4,8 @@ from typing import Annotated
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from app.core.database import app_session
 from app.services.post_services import PostServices
-from fastapi.responses import JSONResponse
+from sqlalchemy import select
+from app.models.posts import Post
 
 posts_router = APIRouter()
 post_services = PostServices()
@@ -27,12 +28,22 @@ async def create_post(post_data: CreatePost, session: Annotated[AsyncSession, De
         session=session
     )
     
-    return JSONResponse(
-        status_code=status.HTTP_201_CREATED,
-        content={
-            "message": "Post created successfully",
-            "new_post": {
-                
-            }
-        }
+    return new_post
+
+
+# getting a single post here 
+@posts_router.get("/{post_id}", status_code=status.HTTP_200_OK, response_model=PostResponse)
+async def get_post(post_id: int, session: Annotated[AsyncSession, Depends(app_session)]):
+    statement = await session.execute(
+        select(Post).where(Post.id == post_id)
+    )
+    
+    posts = statement.scalars().first()
+    
+    if posts:
+        return posts
+    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Posts not found"
     )

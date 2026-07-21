@@ -5,13 +5,11 @@ import uuid
 class UserBaseSchema(BaseModel):
     username: str = Field(min_length=1, max_length=50)
     email: EmailStr
-    is_profile_complete: bool = Field(default=False)
-
-
+   
 # for creating a new user account 
 class CreateUserSchema(UserBaseSchema):
-    password: str = Field(min_length=1, max_length=10)
-
+    profile_image: str
+    
 # for the user response
 class UserResponseSchema(UserBaseSchema):
     

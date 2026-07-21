@@ -20,5 +20,5 @@ class Post(Base):
     
     # for the foreign key here 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
-    user: Mapped[Optional[User]] = relationship(back_populates="posts")
+    user: Mapped[Optional[User]] = relationship(back_populates="posts", lazy="selectin")
     

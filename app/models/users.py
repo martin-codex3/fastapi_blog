@@ -15,13 +15,13 @@ class User(Base):
     
     __tablename__ = "users"
     
-    id: Mapped[uuid.UUID] = mapped_column(default=lambda: uuid.uuid4, primary_key=True)
-    username: Mapped[str] = mapped_column(String(30), default=None, nullable=False, unique=True)
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    username: Mapped[str] = mapped_column(String(30), default=None, nullable=False)
     email: Mapped[str] = mapped_column(default=None, index=True, nullable=False, unique=True)
     profile_image: Mapped[str | None] = mapped_column(String(50), nullable=True, default=None)
     posted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.now(UTC))
 
-    posts: Mapped[List["Post"]] = relationship(back_populates="user")
+    posts: Mapped[List["Post"]] = relationship(back_populates="user", lazy="selectin")
     
     @property
     def image_path(self) -> str:
