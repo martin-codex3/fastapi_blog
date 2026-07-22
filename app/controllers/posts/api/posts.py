@@ -6,6 +6,9 @@ from app.core.database import app_session
 from app.services.post_services import PostServices
 from sqlalchemy import select
 from app.models.posts import Post
+import uuid
+from app.models.users import User
+
 
 posts_router = APIRouter()
 post_services = PostServices()
@@ -47,3 +50,25 @@ async def get_post(post_id: int, session: Annotated[AsyncSession, Depends(app_se
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Posts not found"
     )
+
+
+# getting all the user posts here 
+@posts_router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=PostResponse)
+async def get_user_posts(user_id: uuid.UUID, session: Annotated[AsyncSession, Depends(app_session)]):
+    statement = await session.execute(
+        select(User).where(User.id == user_id)
+    )
+    
+    user = statement.scalars().first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    
+    # we will fetch all the posts by user 
+    user_posts = await session.execute(
+        select(Post).select(Post.user_id == user_id)
+    )
+    
+    all_user_posts = user_posts.scalars().all()
+    
+    return all_user_posts
