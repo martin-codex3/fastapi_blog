@@ -34,7 +34,29 @@ async def home(request: Request, session: Annotated[AsyncSession, Depends(app_se
         status_code=status.HTTP_200_OK,
         context={"posts": posts}
     )
+
+
+# for getting a single post here 
+@posts_router.get("/{post_id}", status_code=status.HTTP_200_OK, name="post_details")
+async def get_post_by_id(request: Request, post_id: int, session: Annotated[AsyncSession, Depends(app_session)]):
+    statement = await session.execute(
+        select(Post).where(Post.id == post_id)
+    )
     
+    post = statement.scalars().first()
+    
+    if post:
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            status_code=status.HTTP_200_OK,
+            context={"post": post}
+        )
+    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Post not found"
+    )    
 
 @posts_router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
 async def create_post(post_data: CreatePost, session: Annotated[AsyncSession, Depends(app_session)]):
