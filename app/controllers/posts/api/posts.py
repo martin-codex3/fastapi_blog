@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Request
 from app.schemas.post_schemas import PostResponse, CreatePost
 from typing import Annotated
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -8,10 +8,33 @@ from sqlalchemy import select
 from app.models.posts import Post
 import uuid
 from app.models.users import User
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 
 posts_router = APIRouter()
 post_services = PostServices()
+
+# we will configure the jinja template here 
+templates = Jinja2Templates(directory="templates")
+
+# for the jinja templates here 
+@posts_router.get("/", response_class=HTMLResponse, include_in_schema=False)
+async def home(request: Request, session: Annotated[AsyncSession, Depends(app_session)]):
+    # we will fetch all the posts here 
+    statement = await session.execute(
+        select(Post)
+    )
+    
+    posts = statement.scalars().all()
+    
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        status_code=status.HTTP_200_OK,
+        context={"posts": posts}
+    )
+    
 
 @posts_router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
 async def create_post(post_data: CreatePost, session: Annotated[AsyncSession, Depends(app_session)]):
@@ -62,7 +85,7 @@ async def get_user_posts(user_id: uuid.UUID, session: Annotated[AsyncSession, De
     user = statement.scalars().first()
     
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
     # we will fetch all the posts by user 
     user_posts = await session.execute(
